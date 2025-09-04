@@ -1,0 +1,14 @@
+npm init -y
+npm install puppeteer
+{
+  "name": "stak",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "stake_scraper.js",
+  "scripts": {
+    "start": "node stake_scraper.js"
+  },
+  "dependencies": {
+    "puppeteer": "^22.0.0"
+  }
+}
